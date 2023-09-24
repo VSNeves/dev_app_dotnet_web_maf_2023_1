@@ -1,0 +1,19 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net7.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+	<GenerateDocumentationFile>true</GenerateDocumentationFile>  
+	<Title>Cadastro de Professores e Alunos do Senac</Title>
+	<Authors>Luis Lessa</Authors>
+	<Description>Projeto destinado ao curso de programação .NET</Description>
+  </PropertyGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\DomainLayer\DomainLayer.csproj" />
+		<ProjectReference Include="..\InfrastructureLayer\InfrastructureLayer.csproj" />
+		<ProjectReference Include="..\ServiceLayer\ServiceLayer.csproj" />
+	</ItemGroup>
+
+</Project>
