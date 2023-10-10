@@ -1,4 +1,8 @@
-﻿using DomainLayer.Interfaces.Service;
+﻿using Dapper;
+using DomainLayer.Interfaces.Repository;
+using DomainLayer.Interfaces.Repository;
+using DomainLayer.Interfaces.Service;
+using InfrastructureLayer.Data.Repository;
 using ServiceLayer;
 
 namespace ApplicationLayer.Configuration
@@ -16,8 +20,10 @@ namespace ApplicationLayer.Configuration
         {
             ConfigureApplicationLayer(services);
             ConfigureDomainLayer(services);
-            ConfigureInfrastructure(services);
+            ConfigureInfrastructureLayer(services);
             ConfigureServiceLayer(services);
+
+            services.AddLogging();
         }
 
         /// <summary>
@@ -36,7 +42,15 @@ namespace ApplicationLayer.Configuration
         /// configura as dependencias da camada de infraestrutura
         /// </summary>
         /// <param name="services"></param>
-        private static void ConfigureInfrastructure(IServiceCollection services) { }
+        private static void ConfigureInfrastructureLayer(IServiceCollection services) 
+        {
+            services.AddScoped<IAlunoRepository, AlunoRepository>();
+            services.AddSingleton<IProfessorRepository, ProfessorRepository>();
+            services.AddScoped<ISqlServerConnectionProvider, SqlServerConnectionProvider>();
+            services.AddScoped<IDbContext, DbContext>();
+            SqlMapper.AddTypeHandler(new DateOnlyHandler());
+        }
+
 
         /// <summary>
         /// configura as dependencias da camada de aplicação
@@ -45,6 +59,7 @@ namespace ApplicationLayer.Configuration
         private static void ConfigureServiceLayer(IServiceCollection services) 
         {
             services.AddSingleton<IProfessorService, ProfessorService>();
+            services.AddSingleton<IAlunoService, AlunoService>();
         }
 
 

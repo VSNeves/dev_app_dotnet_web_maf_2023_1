@@ -31,14 +31,14 @@ namespace ApplicationLayer.Controllers
         [SwaggerOperation("Cadastra um novo professor")]
         [SwaggerResponse(201)] // create
         [SwaggerResponse(400)] // bad request
-        public ActionResult<Professor> Register([FromBody] Professor professor)
+        public async Task<ActionResult> Register([FromBody] Professor professor)
         {
             if (professor.Conhecimentos.Count() <= 0)
             {
                 return BadRequest();
             }
 
-            _professorService.RegistraProfessor(professor);
+            await _professorService.Registra(professor);
 
             return Created("", professor);
         }
@@ -52,9 +52,9 @@ namespace ApplicationLayer.Controllers
         [SwaggerResponse(200)] // create
         [SwaggerResponse(400)] // bad request
 
-        public ActionResult<IEnumerable<Professor>> Lista() 
+        public async Task<ActionResult<IEnumerable<Professor>>> Lista() 
         {
-            var professores = _professorService.ListaProfessores();
+            var professores = await _professorService.Lista();
 
             return Ok(professores);
         }
@@ -69,9 +69,9 @@ namespace ApplicationLayer.Controllers
         [SwaggerResponse(200)] // create
         [SwaggerResponse(400)] // bad request
 
-        public ActionResult<IEnumerable<Professor>> Busca(string nome)
+        public async Task<ActionResult<IEnumerable<Professor>>> Busca(string nome)
         {
-            return Ok(_professorService.BuscaProfessor(nome));
+            return Ok(await _professorService.Busca(nome));
         }
 
         /// <summary>
@@ -84,9 +84,10 @@ namespace ApplicationLayer.Controllers
         [SwaggerResponse(200)] // create
         [SwaggerResponse(400)] // bad request
 
-        public ActionResult<Professor> Atualiza(Professor professor)
+        public async Task<ActionResult> Atualiza(Professor professor)
         {
-            return Ok(_professorService.AtualizarProfessor(professor));
+            await _professorService.Atualiza(professor);
+            return Ok(professor);
         }
 
         /// <summary>
@@ -99,9 +100,9 @@ namespace ApplicationLayer.Controllers
         [SwaggerResponse(202)] // create
         [SwaggerResponse(400)] // bad request
 
-        public ActionResult Deleta(Guid id)
+        public async Task<ActionResult> Deleta(Guid id)
         {
-            _professorService.ApagaProfessor(id);
+            await _professorService.Apaga(id);
             return Accepted();
         }
 

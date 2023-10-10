@@ -1,75 +1,30 @@
 ﻿using ApplicationLayer.Controllers;
+using DomainLayer.Interfaces.Repository;
 using DomainLayer.Interfaces.Service;
 
 namespace ServiceLayer
 {
     public class ProfessorService : IProfessorService
     {
-        private static List<Professor> _professores = default!;
-        public ProfessorService()
-        {
-            _professores = new List<Professor>();
-        }
+        private readonly IProfessorRepository _reposyitory;
 
-        public Professor RegistraProfessor(Professor professor)
-        {
-            // gero o Id
-            professor.Id = Guid.NewGuid();
+        public ProfessorService(IProfessorRepository reposyitory) => _reposyitory = reposyitory;
 
-            // persisto o professor no nosso array estático
-            PersisteProfessor(professor);
 
-            // retorno professor cadastro com o GUID
-            return professor;
+        /// <summary>
+        /// Método responsável por salvar os dados de um professor
+        /// </summary>
+        /// <param name="professor"></param>
+        /// <returns></returns>
+        public async Task Registra(Professor professor) => await _reposyitory.Registra(professor);
 
-        }
+        public async Task<IEnumerable<Professor>> Lista() => await _reposyitory.Lista();
 
-        public IEnumerable<Professor> ListaProfessores()
-        { 
-            return _professores; 
-        }
+        public async Task<IEnumerable<Professor>> Busca(string nome) => await _reposyitory.Busca(nome);
 
-        public IEnumerable<Professor> BuscaProfessor(string nome)
-        {
-            /*return _professores.Find(professor => professor.Nome.Equals(
-                value: nome,
-                comparisonType: StringComparison.InvariantCultureIgnoreCase)
-            )!;*/
+        public async Task Atualiza(Professor professor) => await _reposyitory.Atualiza(professor);
 
-            return _professores.FindAll(prof => prof.Nome.ToLower().Contains(nome.ToLower()));
-
-        }
-                
-        Professor IProfessorService.AtualizarProfessor(Professor professor)
-        {
-            var prof = _professores.Find(professor => professor.Id.ToString().Equals(professor.Id.ToString()))!;
-
-            var idx = _professores.IndexOf(prof);
-
-            _professores[idx].Nome = professor.Nome;
-            _professores[idx].Conhecimentos = professor.Conhecimentos;
-
-            return professor;
-
-        }
-
-        void IProfessorService.ApagaProfessor(Guid id)
-        {
-            var professor = _professores.Find(prof => prof.Id == id);
-
-            if (professor != null) 
-            {
-                _professores.Remove(professor);
-            }
-        }
-
-        // persistencia em memoria
-        private static void PersisteProfessor(Professor professor)
-        {
-            _professores.Add(professor);
-
-        }
-
+        public async Task Apaga(Guid id) => await _reposyitory.Apaga(id);
 
 
     }
